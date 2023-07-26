@@ -42,5 +42,10 @@ export default defineNuxtConfig({
   routeRules: {
     "/**": { prerender: true },
   },
+  runtimeConfig: {
+    public: {
+      commerceJsKey: process.env.COMMERCE_JS_KEY,
+    },
+  },
   ssr: true,
 });
