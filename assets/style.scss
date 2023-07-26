@@ -1,0 +1,27 @@
+@import "./scss/buttons.scss";
+@import "./scss/transitions.scss";
+body {
+  @apply bg-primary;
+  font-size: 18px;
+
+  .dato-module {
+    h2 {
+      @apply text-green-600;
+    }
+  }
+  .breadcrumbs {
+    a {
+      @apply text-orange-600 underline;
+      &.router-link-exact-active {
+        @apply font-normal;
+      }
+    }
+  }
+  a.arrow {
+    @apply font-light;
+    &:after {
+      content: "\2192";
+      @apply inline-block transform translate-x-2;
+    }
+  }
+}
