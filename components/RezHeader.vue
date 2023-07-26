@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <div class="container py-6">
+    <div class="rez-header container py-6">
       <div
         class="logo select-none text-yellow font-header cursor-pointer inline-block"
         @click="$router.push('/')"
@@ -36,4 +36,18 @@
   });
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+  .rez-header {
+    nav {
+      a {
+        @apply text-8xl;
+        font-size: clamp(1.2rem, 6vw, 2.25rem);
+        > span {
+          font-size: 0.5em;
+          height: clamp(1.2rem, 6vw, 1.5rem);
+          width: clamp(1.2rem, 6vw, 1.5rem);
+        }
+      }
+    }
+  }
+</style>
