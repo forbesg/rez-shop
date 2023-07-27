@@ -1,7 +1,7 @@
 <template>
   <div>
     <Title>Your Cart</Title>
-    <div class="bg-yellow-100 py-12">
+    <div class="bg-yellow-100 py-6">
       <div class="container">
         <h1 class="text-6xl font-header mb-8">Your Cart</h1>
         <div
@@ -26,7 +26,12 @@
             <nuxt-link to="/shop" class="arrow text-base text-orange-600"
               >Continue Shopping</nuxt-link
             >
-            <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link>
+            <!-- <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link> -->
+            <nuxt-link
+              :to="cartStore.$state.cart.hosted_checkout_url"
+              class="button"
+              >Checkout</nuxt-link
+            >
           </div>
         </div>
         <div v-else class="text-center py-12">

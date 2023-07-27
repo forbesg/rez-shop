@@ -13,12 +13,14 @@
           class="h-full bg-black bg-opacity-25 flex flex-col justify-center relative z-10"
         >
           <div class="container text-white">
-            <h1 class="text-8xl font-header mb-2">{{ category.name }}</h1>
+            <h1 class="banner--title text-6xl md:text-8xl font-header mb-2">
+              {{ category.name }}
+            </h1>
             <p>{{ category.description }}</p>
           </div>
         </div>
       </div>
-      <div class="bg-yellow-100 py-12">
+      <div class="bg-yellow-100 py-6">
         <div class="container">
           <div class="breadcrumbs text-base mb-4">
             <NuxtLink to="/shop">Shop</NuxtLink> <span>&gt; </span>
@@ -28,7 +30,7 @@
           <p>{{ category.description }}</p>
         </div>
       </div>
-      <div v-if="products" class="products py-12">
+      <div v-if="products" class="products py-6">
         <div class="container grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <ProductCard
             v-for="product in products"
@@ -68,4 +70,10 @@
   const { data: products } = categoryProducts.value;
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .banner {
+    &--title {
+      font-size: clamp(3.5rem, 10vw, 6rem);
+    }
+  }
+</style>

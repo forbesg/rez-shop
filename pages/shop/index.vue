@@ -15,7 +15,7 @@
         <div
           v-for="category in categories"
           :key="category.id"
-          class="bg-yellow-100 py-12"
+          class="bg-yellow-100 py-6"
         >
           <div class="container">
             <h1 class="mb-4">Shop</h1>

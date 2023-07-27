@@ -1,0 +1,22 @@
+form {
+  .form-section-header {
+    @apply inline-block text-xl mt-6 mb-2;
+  }
+  .form-group {
+    label {
+      @apply text-sm font-semibold block;
+    }
+    input {
+      @apply border border-primary-100 rounded px-3 py-2;
+    }
+    > div {
+      // @apply flex flex-col gap-4 items-center;
+      > label {
+        @apply flex-none w-32;
+      }
+      > input {
+        @apply flex-1 w-full;
+      }
+    }
+  }
+}
