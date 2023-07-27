@@ -29,7 +29,7 @@
             <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="text-center py-12">
           <p class="mb-4">Your Cart Is Empty</p>
           <nuxt-link to="/shop" class="button">Continue Shopping</nuxt-link>
         </div>
@@ -42,6 +42,11 @@
   import { useCart } from "@/stores/cart";
 
   const cartStore = useCart();
+  watch(cartStore, (store) => {
+    if (!store?.$state?.cart?.total_unique_items) {
+      scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+  });
 </script>
 
 <style lang="scss" scoped></style>
