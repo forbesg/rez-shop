@@ -36,7 +36,7 @@
 
 <style lang="scss" scoped>
   .notification {
-    @apply fixed bottom-4 right-4 left-4 md:left-auto border-l-4 border-orange-600 md:w-1/2 lg:w-1/3 h-auto bg-white p-4 sm:p-8 shadow;
+    @apply fixed right-0 bottom-0 left-0 md:bottom-4 md:right-4 md:left-auto border-l-4 border-orange-600 md:w-2/3 lg:w-1/2 xl:w-1/3 h-auto bg-white p-4 sm:p-8 shadow;
     &-title {
       @apply text-2xl sm:text-3xl;
     }
