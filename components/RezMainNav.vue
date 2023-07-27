@@ -41,6 +41,9 @@
           height: clamp(1.2rem, 6vw, 1.5rem);
           width: clamp(1.2rem, 6vw, 1.5rem);
         }
+        &.router-link-active {
+          @apply text-yellow-200;
+        }
       }
     }
   }
