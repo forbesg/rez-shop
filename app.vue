@@ -1,7 +1,8 @@
 <template>
   <div class="bg-primary-900 font-sans min-h-screen text-gray-800">
     <NuxtLoadingIndicator color="#ea580c" :height="2" />
-    <RezHeader :cart="cartStore.$state.cart" />
+    <RezHeader />
+    <RezMainNav :cart="cartStore.$state.cart" />
     <div class="min-h-screen bg-yellow-100">
       <NuxtPage />
     </div>
