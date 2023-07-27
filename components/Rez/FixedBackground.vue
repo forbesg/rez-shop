@@ -1,5 +1,5 @@
 <template>
-  <div class="dato-module fixed-background">
+  <div class="dato-module fixed-background" :style="backgroundStyles">
     <div class="inner-wrapper">
       <div class="container">
         <div class="grid gap-6 lg:grid-cols-2">
@@ -14,7 +14,14 @@
           </div>
           <div>
             <div class="aspect-4/3 rounded overflow-hidden">
-              <img src="/chicken.jpg" alt="Chicken" />
+              <nuxt-img
+                src="/chicken.jpg"
+                quality="80"
+                sizes="sm:100vw md:50vw lg:600px"
+                width="600"
+                height="400"
+                alt="Chicken"
+              />
             </div>
           </div>
         </div>
@@ -23,11 +30,20 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const image = useImage();
+  const backgroundStyles = computed(() => {
+    const backgroundImageUrl = image("/images/wood-grain-background.jpg", {
+      width: 600,
+    });
+    return {
+      backgroundImage: `url('${backgroundImageUrl}')`,
+    };
+  });
+</script>
 
 <style lang="scss" scoped>
   .fixed-background {
-    background-image: url("@/assets/images/wood-grain-background.jpg");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
