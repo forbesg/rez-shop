@@ -26,11 +26,11 @@
             <nuxt-link to="/shop" class="arrow text-base text-orange-600"
               >Continue Shopping</nuxt-link
             >
-            <!-- <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link> -->
+            <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link>
             <nuxt-link
               :to="cartStore.$state.cart.hosted_checkout_url"
               class="button"
-              >Checkout</nuxt-link
+              >Hosted Checkout</nuxt-link
             >
           </div>
         </div>

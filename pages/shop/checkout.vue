@@ -54,25 +54,37 @@
                       id="name[first_name]"
                       name="name[first_name]"
                       placeholder="First Name"
+                      v-model="customer.firstname"
                     />
                     <input
                       type="text"
                       id="name[last_name]"
                       name="name[last_name]"
                       placeholder="Last Name"
+                      v-model="customer.lastname"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <div>
                     <label for="email">Email Address:</label>
-                    <input type="email" id="email" name="email" />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      v-model="customer.email"
+                    />
                   </div>
                 </div>
                 <div class="form-group">
                   <div>
                     <label for="tel">Phone Number:</label>
-                    <input type="tel" id="tel" name="tel" />
+                    <input
+                      type="tel"
+                      id="tel"
+                      name="tel"
+                      v-model="customer.phone_number"
+                    />
                   </div>
                 </div>
               </div>
@@ -80,34 +92,37 @@
               <div class="flex flex-col gap-4">
                 <div class="form-group">
                   <div>
-                    <label for="address_first_line">First Line:</label>
+                    <label for="shipping_address_name">Customer Name:</label>
                     <input
                       type="text"
-                      id="address_first_line"
-                      name="address_first_line"
+                      id="shipping_address_name"
+                      name="shipping_address_name"
+                      autocomplete="name"
+                      v-model="shipping.name"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div>
+                    <label for="shipping_address_first_line">First Line:</label>
+                    <input
+                      type="text"
+                      id="shipping_address_first_line"
+                      name="shipping_address_first_line"
                       autocomplete="address-line1"
+                      v-model="shipping.street"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <div>
-                    <label for="address_second_line">Second Line:</label>
+                    <label for="shipping_address_city">Town / City:</label>
                     <input
                       type="text"
-                      id="address_second_line"
-                      name="address_second_line"
-                      autocomplete="address-line2"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div>
-                    <label for="address_city">Town / City:</label>
-                    <input
-                      type="text"
-                      id="address_city"
-                      name="address_city"
+                      id="shipping_address_city"
+                      name="shipping_address_city"
                       autocomplete="address-level2"
+                      v-model="shipping.town_city"
                     />
                   </div>
                 </div>
@@ -118,6 +133,7 @@
                       id="address_county"
                       name="address_county"
                       placeholder="County"
+                      v-model="shipping.county_state"
                     />
                     <input
                       type="text"
@@ -125,6 +141,7 @@
                       name="address_postcode"
                       placeholder="Post/ZIP Code"
                       autocomplete="postal-code"
+                      v-model="shipping.postal_zip_code"
                     />
                   </div>
                 </div>
@@ -133,34 +150,37 @@
               <div class="flex flex-col gap-4">
                 <div class="form-group">
                   <div>
-                    <label for="address_first_line">First Line:</label>
+                    <label for="billing_address_name">Billing Name:</label>
                     <input
                       type="text"
-                      id="address_first_line"
-                      name="address_first_line"
+                      id="billing_address_name"
+                      name="billing_address_name"
+                      autocomplete="name"
+                      v-model="billing.name"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div>
+                    <label for="billing_address_first_line">First Line:</label>
+                    <input
+                      type="text"
+                      id="billing_address_first_line"
+                      name="billing_address_first_line"
                       autocomplete="address-line1"
+                      v-model="billing.street"
                     />
                   </div>
                 </div>
                 <div class="form-group">
                   <div>
-                    <label for="address_second_line">Second Line:</label>
+                    <label for="billing_address_city">Town / City:</label>
                     <input
                       type="text"
-                      id="address_second_line"
-                      name="address_second_line"
-                      autocomplete="address-line2"
-                    />
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div>
-                    <label for="address_city">Town / City:</label>
-                    <input
-                      type="text"
-                      id="address_city"
-                      name="address_city"
+                      id="billing_address_city"
+                      name="billing_address_city"
                       autocomplete="address-level2"
+                      v-model="billing.town_city"
                     />
                   </div>
                 </div>
@@ -171,6 +191,7 @@
                       id="address_county"
                       name="address_county"
                       placeholder="County"
+                      v-model="billing.county_state"
                     />
                     <input
                       type="text"
@@ -178,11 +199,15 @@
                       name="address_postcode"
                       placeholder="Post/ZIP Code"
                       autocomplete="postal-code"
+                      v-model="billing.postal_zip_code"
                     />
                   </div>
                 </div>
               </div>
             </form>
+            <client-only>
+              <Stripe :total="cart.subtotal.raw * 100" />
+            </client-only>
           </div>
         </div>
       </div>
@@ -193,17 +218,39 @@
 
 <script lang="ts" setup>
   import { useCart } from "@/stores/cart";
-  // const { $commerce } = useNuxtApp();
-  // const router = useRouter();
+  const { $commerce } = useNuxtApp();
+  const router = useRouter();
   const { cart } = useCart();
-  // const checkoutId = ref("");
-  // if (!cart) {
-  //   router.replace("/shop/cart");
-  // } else {
-  //   const { id } = await $commerce.checkout.generateTokenFrom("cart", cart.id);
-  //   console.log(id);
-  //   checkoutId.value = id;
-  // }
+  const checkoutId = ref("");
+  const customer = ref({
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone_number: "",
+  });
+  const shipping = ref({
+    name: "",
+    street: "",
+    town_city: "",
+    county_state: "",
+    postal_zip_code: "",
+    country: "",
+  });
+  const billing = ref({
+    name: "",
+    street: "",
+    town_city: "",
+    county_state: "",
+    postal_zip_code: "",
+    country: "",
+  });
+  if (!cart) {
+    router.replace("/shop/cart");
+  } else {
+    const { id } = await $commerce.checkout.generateTokenFrom("cart", cart.id);
+    console.log(id);
+    checkoutId.value = id;
+  }
 </script>
 
 <style lang="scss" scoped></style>

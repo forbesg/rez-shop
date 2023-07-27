@@ -22,6 +22,15 @@
 <script lang="ts" setup>
   import { useCart } from "@/stores/cart";
   import { useNotification } from "@/stores/notification";
+
+  useHead({
+    script: [
+      {
+        src: "https://js.stripe.com/v3/",
+      },
+    ],
+  });
+
   const cartStore = useCart();
   const notificationStore = useNotification();
   const { $commerce } = useNuxtApp();

@@ -5,7 +5,8 @@
         class="logo select-none text-yellow font-header cursor-pointer inline-block"
         @click="$router.push('/')"
       >
-        <span class="text-6xl block text-orange-600">The Header</span>
+        <!-- <span class="text-6xl block text-orange-600">The Header</span> -->
+        <Logo />
         <span class="text-yellow text-2xl block">The · Strap · Line</span>
       </div>
     </div>
