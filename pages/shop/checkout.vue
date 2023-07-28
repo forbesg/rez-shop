@@ -205,9 +205,14 @@
                 </div>
               </div>
             </form>
-            <client-only>
-              <Stripe :total="cart.subtotal.raw * 100" />
-            </client-only>
+            <!-- <client-only>
+              <Stripe
+                :total="cart.subtotal.raw * 100"
+                :billing_details="billing"
+                :customer="customer"
+                :handlePayment="handlePayment"
+              />
+            </client-only> -->
           </div>
         </div>
       </div>
@@ -218,6 +223,7 @@
 
 <script lang="ts" setup>
   import { useCart } from "@/stores/cart";
+  import { LineItem } from "@chec/commerce.js/types/line-item";
   const { $commerce } = useNuxtApp();
   const router = useRouter();
   const { cart } = useCart();
@@ -234,23 +240,68 @@
     town_city: "",
     county_state: "",
     postal_zip_code: "",
-    country: "",
+    country: "GB",
   });
   const billing = ref({
     name: "",
     street: "",
     town_city: "",
-    county_state: "",
+    county_state: "GB-EDH",
     postal_zip_code: "",
-    country: "",
+    country: "GB",
   });
+  const shippingOptions = ref();
+  console.log(customer);
+
   if (!cart) {
     router.replace("/shop/cart");
   } else {
     const { id } = await $commerce.checkout.generateTokenFrom("cart", cart.id);
-    console.log(id);
+    const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
+      country: "GB",
+    });
+    shippingOptions.value = shippingInfo;
     checkoutId.value = id;
   }
+
+  const handlePayment = async (stripePaymentMethod: sting) => {
+    console.log(stripePaymentMethod);
+    const { phone_number, ...restCustomer } = customer.value;
+    const { county_state, ...restBilling } = billing.value;
+    const { county_state: state, ...restShipping } = shipping.value;
+    restCustomer.phone = phone_number;
+    const data = {
+      line_items: cart.line_items.reduce((prev: object, curr: LineItem) => {
+        prev[curr.id] = { quantity: curr.quantity };
+        return prev;
+      }, {}),
+      customer: restCustomer,
+      shipping: restShipping,
+      billing: restBilling,
+      fulfillment: {
+        shipping_method: shippingOptions.value[0].id,
+      },
+      // payment: {
+      //   gateway: "test",
+      //   stripe: {
+      //     payment_method_id: stripePaymentMethod,
+      //   },
+      // },
+      payment: {
+        gateway: "test_gateway",
+        card: {
+          number: "4242 4242 4242 4242",
+          expiry_month: "12",
+          expiry_year: "2023",
+          cvc: "123",
+          postal_zip_code: "94103",
+        },
+      },
+    };
+    console.log(data);
+
+    const response = await $commerce.checkout.capture(checkoutId.value, data);
+  };
 </script>
 
 <style lang="scss" scoped></style>

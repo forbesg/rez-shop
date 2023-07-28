@@ -4,7 +4,15 @@
     <div>
       <div id="payment-element"></div>
     </div>
-    <button @click="submitElements">Pay Now</button>
+    <div class="mt-4">
+      <pre>{{ billing_details }}</pre>
+      <button @click="submitElements" class="block w-full">
+        Complete Order
+      </button>
+      <div v-if="error" class="error">
+        <p>{{ error }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -15,8 +23,21 @@
       type: Number,
       required: true,
     },
+    billing_details: {
+      type: Object,
+      required: false,
+    },
+    customer: {
+      type: Object,
+      required: false,
+    },
+    handlePayment: {
+      type: Function,
+      required: true,
+    },
   });
   const submitElements = ref();
+  const error = ref("");
   onMounted(() => {
     const stripe = Stripe("pk_test_Ri2JyD3poWvt6YvpznA1nVpR0083v3iGTW");
 
@@ -49,7 +70,7 @@
       amount: props.total, // Needs to include shipping
       fonts: [
         {
-          cssSrc: "https://fonts.googleapis.com/css2?family=Questrial:400,600",
+          cssSrc: "https://fonts.googleapis.com/css2?family=Questrial:400",
         },
       ],
       paymentMethodCreation: "manual",
@@ -61,27 +82,34 @@
       paymentElement.mount("#payment-element");
     }, 1000);
     submitElements.value = async () => {
+      console.log("click", props.billing_details);
+
+      if (!props.billing_details) {
+        error.value = "Please complete the cardholder details above";
+        return;
+      }
       const result = await elements.submit();
       console.log(result); // handle Errors
       const { paymentMethod } = await stripe.createPaymentMethod({
         elements,
         params: {
           billing_details: {
-            name: "Jenny Rosen", //TODO pass billing information captured in the payment form
-            email: "jenny@ronson.com",
-            phone: "08897789827",
+            name: props.billing_details.name, //TODO pass billing information captured in the payment form
+            email: props.customer?.email,
+            phone: props.customer?.phone_number,
             address: {
-              city: null,
+              city: props.billing_details.town_city,
               country: "UK",
-              postal_code: "EH6 4LB",
-              line1: null,
+              postal_code: props.billing_details.postal_zip_code,
+              line1: props.billing_details.street,
               line2: null,
-              state: null,
+              state: props.billing_details.county_state,
             },
           },
         },
       });
       console.log(paymentMethod); // Pass payment method to CommerceJS
+      props.handlePayment(paymentMethod.id);
     };
   });
 </script>
