@@ -1,8 +1,10 @@
 <template>
   <div class="bg-yellow-100 text-primary">
     <Title>This is The Title</Title>
+    <DatoModularResolver :sections="homepage.sections" />
+    <!-- <pre>{{ homepage }}</pre> -->
     <RezIntro
-      :module="{ title: 'This is the title', align: { center: true } }"
+      :section="{ title: 'This is the title', align: { center: true } }"
     />
     <RezFixedBackground />
     <RezEmailCapture />
@@ -18,6 +20,33 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const homepageQuery = `
+    query HomepageQuery {
+      homepage {
+        id
+        sections {
+          __typename
+          content
+          subtitle
+          title
+        }
+        _seoMetaTags {
+          attributes
+          content
+          tag
+        }
+      }
+    }
+  `;
+
+  const { data } = await useGraphqlQuery({ query: homepageQuery });
+
+  // if (error) {
+  //   console.log(error);
+  // }
+
+  const { homepage } = data.value;
+</script>
 
 <style lang="scss" scoped></style>

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <RezIntro :module="{ title: 'About Me' }" />
+    <Title>About Me</Title>
+    <RezIntro :section="{ title: 'About Me' }" />
   </div>
 </template>
 

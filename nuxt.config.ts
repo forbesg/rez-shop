@@ -45,6 +45,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       commerceJsKey: process.env.COMMERCE_JS_KEY,
+      datoCmsToken: process.env.DATO_CMS_TOKEN,
+      datoEndpoint: process.env.DATO_ENDPOINT,
     },
   },
   ssr: true,

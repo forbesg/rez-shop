@@ -8,7 +8,10 @@
           offers.
         </p>
       </div>
-      <form action="" class="grid grid-cols-2 gap-2 lg:col-span-1">
+      <form
+        action=""
+        class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:col-span-1"
+      >
         <div class="inline-flex flex-col">
           <label for="first_name" class="flex-none text-sm font-semibold"
             >First Name:</label
@@ -31,7 +34,7 @@
             class="flex-1 max-h-max p-2"
           />
         </div>
-        <div class="inline-flex flex-col col-span-2">
+        <div class="inline-flex flex-col sm:col-span-2">
           <label for="email" class="flex-none text-sm font-semibold"
             >Email:</label
           >

@@ -1,7 +1,7 @@
 <template>
   <div class="dato-module intro">
-    <div class="container" :class="[{ 'text-center': module?.align?.center }]">
-      <h2 v-if="module?.title" class="intro--title">{{ module.title }}</h2>
+    <div class="container" :class="[{ 'text-center': section?.align?.center }]">
+      <h2 v-if="section?.title" class="intro--title">{{ section.title }}</h2>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi itaque
         fugiat velit non atque omnis, facere quia architecto perspiciatis
@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
   defineProps({
-    module: {
+    section: {
       type: Object,
-      required: false,
+      required: true,
     },
   });
 </script>

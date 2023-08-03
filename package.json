@@ -9,7 +9,6 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@hexdigital/nuxt-datocms": "^1.1.5",
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.0.0-rc.1",
     "@nuxtjs/google-fonts": "^3.0.2",
