@@ -1,7 +1,7 @@
 <template>
   <div>
     <Title>Your Cart</Title>
-    <div class="bg-yellow-100 py-6">
+    <div v-if="!loading" class="bg-yellow-100 py-6">
       <div class="container">
         <h1 class="text-6xl font-header mb-8">Your Cart</h1>
         <div
@@ -39,6 +39,14 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <div
+        class="h-96 py-24 flex flex-col justify-center items-center text-primary"
+      >
+        <LoadingAnimation />
+        <span>Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -46,10 +54,18 @@
   import { useCart } from "@/stores/cart";
 
   const cartStore = useCart();
+  const loading = ref(true);
+
+  if (cartStore.getCart) {
+    loading.value = false;
+  }
 
   watch(cartStore, (store) => {
     if (!store?.$state?.cart?.total_unique_items) {
       scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    }
+    if (store?.$state?.cart) {
+      loading.value = false;
     }
   });
 </script>

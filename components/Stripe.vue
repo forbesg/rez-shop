@@ -1,13 +1,17 @@
 <template>
   <div
-    class="mt-6 bg-gradient-to-b from-slate-300 to-gray-200 border border-primary-100 bg-opacity-75 p-4 rounded"
+    class="mt-6 bg-gradient-to-b from-slate-100 to-gray-50 border border-primary-100 bg-opacity-75 p-4 rounded"
   >
     <span class="block mb-4 text-xl">Card Details</span>
     <div>
       <div id="payment-element"></div>
     </div>
     <div class="mt-4">
-      <button @click="submitElements" class="block w-full">
+      <button
+        @click="submitElements"
+        class="block w-full"
+        :class="[{ loading: submittingOrder }]"
+      >
         Complete Order
       </button>
       <div v-if="error" class="error">
@@ -34,6 +38,10 @@
     },
     handlePayment: {
       type: Function,
+      required: true,
+    },
+    submittingOrder: {
+      type: Boolean,
       required: true,
     },
   });

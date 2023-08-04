@@ -34,12 +34,12 @@
               </div>
             </div>
             <div class="cart-total text-right border-t pt-4">
-              <p class="font-semibold mt-4">
+              <p class="font-semibold my-4">
                 Subtotal: {{ cart.subtotal.formatted_with_symbol }}
               </p>
-              <div class="flex justify-between items-center">
+              <div class="flex justify-between items-start">
                 <p class="text-sm font-bold">Shipping</p>
-                <div class="text-sm flex flex-col items-end mt-4">
+                <div class="text-sm flex flex-col gap-1 items-end">
                   <div
                     v-for="method in shippingOptions"
                     :key="method.id"
@@ -51,8 +51,9 @@
                       :id="method.id"
                       :value="method.id"
                       v-model="selectedShippingOption"
+                      class="cursor-pointer"
                     />
-                    <label for="shipping"
+                    <label :for="method.id"
                       >{{ method.description }} - ({{
                         method.price.formatted_with_symbol
                       }})</label
@@ -236,6 +237,7 @@
                 :billing_details="billing"
                 :customer="customer"
                 :handlePayment="handlePayment"
+                :submittingOrder="submittingOrder"
               />
             </client-only>
           </div>
@@ -277,6 +279,7 @@
   });
   const shippingOptions = ref();
   const selectedShippingOption = ref();
+  const submittingOrder = ref(false);
 
   const totalPrice = computed(() => {
     return shippingOptions.value && selectedShippingOption.value
@@ -301,6 +304,8 @@
   }
 
   const handlePayment = async (stripePaymentMethod: string) => {
+    if (submittingOrder.value) return;
+    submittingOrder.value = true;
     const { phone_number, ...restCustomer } = customer.value;
     const { county_state, ...restBilling } = billing.value;
     const { county_state: state, ...restShipping } = shipping.value;
@@ -335,9 +340,11 @@
     };
     try {
       const response = await $commerce.checkout.capture(checkoutId.value, data);
-      console.log(response);
+      router.replace("/shop/payment-successful");
     } catch (err) {
       console.log(err);
+    } finally {
+      submittingOrder.value = false;
     }
   };
 </script>
