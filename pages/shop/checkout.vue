@@ -232,7 +232,7 @@
             </form>
             <client-only>
               <Stripe
-                :total="cart.subtotal.raw * 100"
+                :total="totalPrice * 100"
                 :billing_details="billing"
                 :customer="customer"
                 :handlePayment="handlePayment"
@@ -280,11 +280,11 @@
 
   const totalPrice = computed(() => {
     return shippingOptions.value && selectedShippingOption.value
-      ? cart.subtotal.raw +
+      ? cart?.subtotal.raw +
           shippingOptions.value.find(
             ({ id }) => id === selectedShippingOption.value
           ).price.raw
-      : cart.subtotal.raw;
+      : cart?.subtotal.raw || "NaN";
   });
 
   if (!cart) {
