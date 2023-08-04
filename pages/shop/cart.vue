@@ -26,11 +26,11 @@
               >Continue Shopping</nuxt-link
             >
             <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link>
-            <nuxt-link
+            <!-- <nuxt-link
               :to="cartStore.getCart.hosted_checkout_url"
               class="button"
               >Hosted Checkout</nuxt-link
-            >
+            > -->
           </div>
         </div>
         <div v-else class="text-center py-12">
