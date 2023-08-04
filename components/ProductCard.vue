@@ -16,6 +16,8 @@
     <div class="product-card-content">
       <h2 class="product-card-content--title">{{ product.name }}</h2>
       <div v-html="product.description"></div>
+    </div>
+    <div class="product-card-footer">
       <NuxtLink
         :to="
           category_slug
@@ -42,14 +44,20 @@
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .product-card {
-    @apply bg-white;
+    @apply flex flex-col bg-white;
     &-content {
-      @apply p-6 text-base;
+      @apply flex-1 p-6 text-base;
       &--title {
         @apply font-header text-4xl mb-2;
       }
+      p {
+        @apply my-2;
+      }
+    }
+    &-footer {
+      @apply p-6 pt-0;
     }
   }
 </style>

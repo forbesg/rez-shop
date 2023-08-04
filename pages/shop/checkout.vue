@@ -11,13 +11,15 @@
               :key="item.id"
               class="flex gap-4 mb-4"
             >
-              <nuxt-img
-                :src="item.image.url"
-                width="100"
-                height="80"
-                :alt="item.name"
-                class="flex-none"
-              ></nuxt-img>
+              <div class="flex-none w-24 aspect-[5/4]">
+                <nuxt-img
+                  :src="item.image.url"
+                  :alt="item.name"
+                  sizes="sm:100vw md:25vw"
+                  densities="x1 x2"
+                  class="w-full h-full object-cover"
+                />
+              </div>
               <div class="flex-1 text-base">
                 <p class="item-title text-lg font-semibold">{{ item.name }}</p>
                 <div class="">
@@ -32,10 +34,33 @@
               </div>
             </div>
             <div class="cart-total text-right border-t pt-4">
-              <p class="text-sm">Shipping: Free</p>
-              <p class="font-semibold">
-                Total To Pay: {{ cart.subtotal.formatted_with_symbol }}
+              <p class="font-semibold mt-4">
+                Subtotal: {{ cart.subtotal.formatted_with_symbol }}
               </p>
+              <div class="flex justify-between items-center">
+                <p class="text-sm font-bold">Shipping</p>
+                <div class="text-sm flex flex-col items-end mt-4">
+                  <div
+                    v-for="method in shippingOptions"
+                    :key="method.id"
+                    class="inline-flex gap-2"
+                  >
+                    <input
+                      type="radio"
+                      name="shipping"
+                      :id="method.id"
+                      :value="method.id"
+                      v-model="selectedShippingOption"
+                    />
+                    <label for="shipping"
+                      >{{ method.description }} - ({{
+                        method.price.formatted_with_symbol
+                      }})</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <p class="font-semibold mt-4">Total To Pay: £{{ totalPrice }}</p>
               <!-- {{ cart.hosted_checkout_url }} -->
             </div>
           </div>
@@ -205,19 +230,18 @@
                 </div>
               </div>
             </form>
-            <!-- <client-only>
+            <client-only>
               <Stripe
                 :total="cart.subtotal.raw * 100"
                 :billing_details="billing"
                 :customer="customer"
                 :handlePayment="handlePayment"
               />
-            </client-only> -->
+            </client-only>
           </div>
         </div>
       </div>
     </div>
-    <pre v-if="cart">{{ cart }}</pre>
   </div>
 </template>
 
@@ -246,12 +270,22 @@
     name: "",
     street: "",
     town_city: "",
-    county_state: "GB-EDH",
+    // county_state: "GB-EDH",
+    county_state: "",
     postal_zip_code: "",
     country: "GB",
   });
   const shippingOptions = ref();
-  console.log(customer);
+  const selectedShippingOption = ref();
+
+  const totalPrice = computed(() => {
+    return shippingOptions.value && selectedShippingOption.value
+      ? cart.subtotal.raw +
+          shippingOptions.value.find(
+            ({ id }) => id === selectedShippingOption.value
+          ).price.raw
+      : cart.subtotal.raw;
+  });
 
   if (!cart) {
     router.replace("/shop/cart");
@@ -260,12 +294,13 @@
     const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
       country: "GB",
     });
+
     shippingOptions.value = shippingInfo;
+    selectedShippingOption.value = shippingInfo[0].id;
     checkoutId.value = id;
   }
 
-  const handlePayment = async (stripePaymentMethod: sting) => {
-    console.log(stripePaymentMethod);
+  const handlePayment = async (stripePaymentMethod: string) => {
     const { phone_number, ...restCustomer } = customer.value;
     const { county_state, ...restBilling } = billing.value;
     const { county_state: state, ...restShipping } = shipping.value;
@@ -277,9 +312,9 @@
       }, {}),
       customer: restCustomer,
       shipping: restShipping,
-      billing: restBilling,
+      billing: billing.value,
       fulfillment: {
-        shipping_method: shippingOptions.value[0].id,
+        shipping_method: selectedShippingOption.value,
       },
       // payment: {
       //   gateway: "test",
@@ -298,9 +333,12 @@
         },
       },
     };
-    console.log(data);
-
-    const response = await $commerce.checkout.capture(checkoutId.value, data);
+    try {
+      const response = await $commerce.checkout.capture(checkoutId.value, data);
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
   };
 </script>
 

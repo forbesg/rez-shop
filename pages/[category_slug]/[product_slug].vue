@@ -12,7 +12,7 @@
             class="w-full h-full object-cover"
           />
         </div>
-        <div class="p-6">
+        <div class="flex flex-col p-6">
           <h1 class="text-6xl font-header mb-4">{{ product.name }}</h1>
           <div class="meta text-xs font-button text-gray-500">
             <p>
@@ -38,7 +38,7 @@
           <div
             v-if="product?.description"
             v-html="product.description"
-            class="my-6"
+            class="flex-1 my-6"
           ></div>
 
           <p class="text-right">

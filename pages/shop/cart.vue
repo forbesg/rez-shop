@@ -5,20 +5,19 @@
       <div class="container">
         <h1 class="text-6xl font-header mb-8">Your Cart</h1>
         <div
-          v-if="
-            cartStore.$state.cart && cartStore.$state.cart.line_items.length
-          "
+          v-if="cartStore.getCart && cartStore.getCart.line_items.length"
           class="flex flex-col gap-6"
         >
           <CartProductCard
-            v-for="item in cartStore.$state.cart.line_items"
+            v-for="item in cartStore.getCart.line_items"
             :key="item.id"
             :item="item"
           />
           <div class="text-right">
             <p class="text-xl font-semibold">
               Cart Total:
-              {{ cartStore.$state.cart.subtotal.formatted_with_symbol }}
+              <!-- {{ cartStore.$state.cart.subtotal.formatted_with_symbol }} -->
+              {{ cartStore.getCart?.subtotal.formatted_with_symbol }}
             </p>
             <p class="text-base">Shipping: Calculated at checkout</p>
           </div>
@@ -26,9 +25,9 @@
             <nuxt-link to="/shop" class="arrow text-base text-orange-600"
               >Continue Shopping</nuxt-link
             >
-            <!-- <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link> -->
+            <nuxt-link to="/shop/checkout" class="button">Checkout</nuxt-link>
             <nuxt-link
-              :to="cartStore.$state.cart.hosted_checkout_url"
+              :to="cartStore.getCart.hosted_checkout_url"
               class="button"
               >Hosted Checkout</nuxt-link
             >
@@ -47,6 +46,7 @@
   import { useCart } from "@/stores/cart";
 
   const cartStore = useCart();
+
   watch(cartStore, (store) => {
     if (!store?.$state?.cart?.total_unique_items) {
       scrollTo({ top: 0, left: 0, behavior: "smooth" });

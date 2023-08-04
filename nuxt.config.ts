@@ -3,6 +3,15 @@ export default defineNuxtConfig({
   // devtools: { enabled: true },
   app: {
     pageTransition: { name: "page", mode: "out-in" },
+    head: {
+      script: [
+        {
+          src: "https://js.stripe.com/v3/",
+          defer: true,
+          async: true,
+        },
+      ],
+    },
   },
   css: ["/assets/style.scss"],
   modules: [

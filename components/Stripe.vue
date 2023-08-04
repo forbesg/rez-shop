@@ -1,11 +1,12 @@
 <template>
-  <div class="mt-6 bg-orange-300 bg-opacity-75 p-4 rounded">
+  <div
+    class="mt-6 bg-gradient-to-b from-slate-300 to-gray-200 border border-primary-100 bg-opacity-75 p-4 rounded"
+  >
     <span class="block mb-4 text-xl">Card Details</span>
     <div>
       <div id="payment-element"></div>
     </div>
     <div class="mt-4">
-      <pre>{{ billing_details }}</pre>
       <button @click="submitElements" class="block w-full">
         Complete Order
       </button>

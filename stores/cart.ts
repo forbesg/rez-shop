@@ -10,7 +10,9 @@ export const useCart = defineStore("userCart", {
     cart: undefined as Cart | AddUpdateResponse | RemoveResponse | undefined,
   }),
   getters: {
-    getCart: (state) => state.cart,
+    getCart: (state) => {
+      return state.cart;
+    },
   },
   actions: {
     setCart(cart?: Cart | AddUpdateResponse | RemoveResponse) {
