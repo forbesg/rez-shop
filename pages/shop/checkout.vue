@@ -2,7 +2,7 @@
   <div>
     <div class="container py-12">
       <h1 class="font-header text-6xl mb-6">Checkout</h1>
-      <div v-if="cart" class="relative grid lg:grid-cols-2 gap-6">
+      <div v-if="cart && !pending" class="relative grid lg:grid-cols-2 gap-6">
         <div>
           <div class="sticky top-24 bg-white p-6">
             <h2 class="mb-4 text-2xl">Your Cart</h2>
@@ -243,6 +243,15 @@
           </div>
         </div>
       </div>
+
+      <div v-else>
+        <div
+          class="h-96 py-24 flex flex-col justify-center items-center text-primary"
+        >
+          <LoadingAnimation />
+          <span>Loading...</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -292,16 +301,14 @@
 
   if (!cart) {
     router.replace("/shop/cart");
-  } else {
+  }
+  const { pending, data: commerceData } = await useLazyAsyncData(async () => {
     const { id } = await $commerce.checkout.generateTokenFrom("cart", cart.id);
     const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
       country: "GB",
     });
-
-    shippingOptions.value = shippingInfo;
-    selectedShippingOption.value = shippingInfo[0].id;
-    checkoutId.value = id;
-  }
+    return { id, shippingInfo };
+  });
 
   const handlePayment = async (stripePaymentMethod: string) => {
     if (submittingOrder.value) return;
@@ -340,6 +347,8 @@
     };
     try {
       const response = await $commerce.checkout.capture(checkoutId.value, data);
+      console.log(response);
+
       router.replace("/shop/payment-successful");
     } catch (err) {
       console.log(err);
@@ -347,6 +356,13 @@
       submittingOrder.value = false;
     }
   };
+  watch(commerceData, (data) => {
+    if (!data) return;
+    const { id, shippingInfo } = data;
+    shippingOptions.value = shippingInfo;
+    selectedShippingOption.value = shippingInfo[0].id;
+    checkoutId.value = id;
+  });
 </script>
 
 <style lang="scss" scoped></style>
