@@ -3,12 +3,13 @@
     class="cart-product-card bg-white grid grid-cols-1 md:grid-cols-4 shadow"
   >
     <div class="col-span-1">
-      <div class="image-wrapper aspect-[5/4] h-full w-full overflow-hidden">
+      <div class="image-wrapper h-full w-full overflow-hidden">
         <nuxt-picture
           :src="item.image.url"
           :alt="item.name"
           sizes="sm:100vw md:25vw"
           densities="x1 x2"
+          class="aspect-[5/4]"
         />
       </div>
     </div>
