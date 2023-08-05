@@ -2,7 +2,7 @@
   <div class="product-card">
     <div
       v-if="product?.image"
-      class="bg-white image-wrapper aspect-[5/4] w-full overflow-hidden"
+      class="bg-white image-wrapper aspect-[5/4] overflow-hidden"
     >
       <nuxt-img
         :src="product.image?.url"
