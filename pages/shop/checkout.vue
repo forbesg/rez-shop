@@ -70,7 +70,6 @@
         </div>
         <div v-if="checkoutId">
           <div class="bg-white p-6">
-            <pre class="text-xs">checkout id: {{ checkoutId }}</pre>
             <form action="">
               <span class="form-section-header">Your Details</span>
               <div class="flex flex-col gap-4">
@@ -100,6 +99,7 @@
                       type="email"
                       id="email"
                       name="email"
+                      placeholder="Email Address"
                       v-model="customer.email"
                     />
                   </div>
@@ -111,6 +111,7 @@
                       type="tel"
                       id="tel"
                       name="tel"
+                      placeholder="Phone Number"
                       v-model="customer.phone_number"
                     />
                   </div>
@@ -120,7 +121,7 @@
               <div class="flex flex-col gap-4">
                 <div class="form-group">
                   <div>
-                    <label for="shipping_address_name">Customer Name:</label>
+                    <label for="shipping_address_name">Full Name:</label>
                     <input
                       type="text"
                       id="shipping_address_name"
@@ -155,22 +156,37 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="flex gap-2">
-                    <input
-                      type="text"
-                      id="address_county"
-                      name="address_county"
-                      placeholder="County"
-                      v-model="shipping.county_state"
-                    />
-                    <input
-                      type="text"
-                      id="address_postcode"
-                      name="address_postcode"
-                      placeholder="Post/ZIP Code"
-                      autocomplete="postal-code"
-                      v-model="shipping.postal_zip_code"
-                    />
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="w-full">
+                      <label for="address_county">County</label>
+                      <select
+                        name="address_county"
+                        id="address_county"
+                        placeholder="County"
+                        v-model="shipping.county_state"
+                      >
+                        <option
+                          v-for="locale in Object.keys(
+                            subdivisions.subdivisions
+                          )"
+                          :key="`shipping-${locale}`"
+                          :value="locale"
+                        >
+                          {{ subdivisions.subdivisions[locale] }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="w-full">
+                      <label for="address_postcode">Postcode</label>
+                      <input
+                        type="text"
+                        id="address_postcode"
+                        name="address_postcode"
+                        placeholder="Post/ZIP Code"
+                        autocomplete="postal-code"
+                        v-model="shipping.postal_zip_code"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -213,22 +229,43 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="flex gap-2">
-                    <input
+                  <div class="grid grid-cols-2 gap-2">
+                    <!-- <input
                       type="text"
-                      id="address_county"
+                      id="billing_address_county"
                       name="address_county"
                       placeholder="County"
                       v-model="billing.county_state"
-                    />
-                    <input
-                      type="text"
-                      id="address_postcode"
-                      name="address_postcode"
-                      placeholder="Post/ZIP Code"
-                      autocomplete="postal-code"
-                      v-model="billing.postal_zip_code"
-                    />
+                    /> -->
+                    <div>
+                      <select
+                        name="billing_address_county"
+                        id="billing_address_county"
+                        placeholder="County"
+                        class="flex-1 w-1/2"
+                        v-model="billing.county_state"
+                      >
+                        <option
+                          v-for="locale in Object.keys(
+                            subdivisions.subdivisions
+                          )"
+                          :key="`shipping-${locale}`"
+                          :value="locale"
+                        >
+                          {{ subdivisions.subdivisions[locale] }}
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        id="address_postcode"
+                        name="address_postcode"
+                        placeholder="Post/ZIP Code"
+                        autocomplete="postal-code"
+                        v-model="billing.postal_zip_code"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -291,6 +328,7 @@
   const shippingOptions = ref();
   const selectedShippingOption = ref();
   const submittingOrder = ref(false);
+  const subdivisions = ref();
 
   const totalPrice = computed(() => {
     return shippingOptions.value && selectedShippingOption.value
@@ -313,7 +351,9 @@
       const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
         country: "GB",
       });
-      return { id, shippingInfo };
+      const localeSubdivisions =
+        await $commerce.services.localeListSubdivisions("GB");
+      return { id, shippingInfo, localeSubdivisions };
     },
     { server: false }
   );
@@ -355,8 +395,6 @@
     };
     try {
       const response = await $commerce.checkout.capture(checkoutId.value, data);
-      console.log(response);
-
       router.replace("/shop/payment-successful");
     } catch (err) {
       console.log(err);
@@ -366,9 +404,10 @@
   };
   watch(commerceData, (data) => {
     if (!data) return;
-    const { id, shippingInfo } = data;
+    const { id, shippingInfo, localeSubdivisions } = data;
     shippingOptions.value = shippingInfo;
     selectedShippingOption.value = shippingInfo[0].id;
+    subdivisions.value = localeSubdivisions;
     checkoutId.value = id;
   });
 </script>

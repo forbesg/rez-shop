@@ -1,13 +1,26 @@
-form {
+form,
+.faux-form {
   .form-section-header {
-    @apply inline-block text-xl mt-6 mb-2;
+    @apply relative inline-block text-xl mb-4 text-primary;
+    &:after {
+      content: "";
+      @apply absolute bottom-0 left-0 h-px w-full bg-orange-600;
+    }
+    &:not(:first-child) {
+      @apply mt-8;
+    }
   }
   .form-group {
     label {
-      @apply text-sm font-semibold block;
+      @apply text-sm font-semibold block mb-1;
     }
-    input {
-      @apply border border-primary-100 rounded px-3 py-2;
+    input,
+    select {
+      @apply bg-white border border-slate-200 rounded px-3 py-2 h-12 focus:outline-orange-600;
+      width: stretch;
+    }
+    select {
+      @apply py-3;
     }
     > div {
       // @apply flex flex-col gap-4 items-center;

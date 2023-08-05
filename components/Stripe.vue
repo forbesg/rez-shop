@@ -1,8 +1,10 @@
 <template>
   <div
-    class="mt-6 bg-gradient-to-b from-slate-100 to-gray-50 border border-primary-100 bg-opacity-75 p-4 rounded"
+    class="mt-6 bg-gradient-to-b from-slate-100 to-gray-50 border border-slate-200 bg-opacity-75 p-4 rounded"
   >
-    <span class="block mb-4 text-xl">Card Details</span>
+    <div class="faux-form">
+      <span class="form-section-header block mb-4 text-xl">Card Details</span>
+    </div>
     <div>
       <div id="payment-element"></div>
     </div>
@@ -12,7 +14,13 @@
         class="block w-full"
         :class="[{ loading: submittingOrder }]"
       >
-        Complete Order
+        Complete Order -
+        {{
+          (total / 100).toLocaleString("en-GB", {
+            style: "currency",
+            currency: "GBP",
+          })
+        }}
       </button>
       <div v-if="error" class="error">
         <p>{{ error }}</p>
@@ -90,6 +98,15 @@
     setTimeout(() => {
       paymentElement.mount("#payment-element");
     }, 1000);
+
+    paymentElement.on("change", (event: any) => {
+      console.log(event);
+
+      if (event.complete) {
+        console.log("complete");
+      }
+    });
+
     submitElements.value = async () => {
       console.log("click", props.billing_details);
 
