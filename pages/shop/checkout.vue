@@ -302,13 +302,19 @@
   if (!cart) {
     router.replace("/shop/cart");
   }
-  const { pending, data: commerceData } = await useLazyAsyncData(async () => {
-    const { id } = await $commerce.checkout.generateTokenFrom("cart", cart.id);
-    const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
-      country: "GB",
-    });
-    return { id, shippingInfo };
-  });
+  const { pending, data: commerceData } = await useLazyAsyncData(
+    async () => {
+      const { id } = await $commerce.checkout.generateTokenFrom(
+        "cart",
+        cart?.id
+      );
+      const shippingInfo = await $commerce.checkout.getShippingOptions(id, {
+        country: "GB",
+      });
+      return { id, shippingInfo };
+    },
+    { server: false }
+  );
 
   const handlePayment = async (stripePaymentMethod: string) => {
     if (submittingOrder.value) return;
@@ -318,7 +324,7 @@
     const { county_state: state, ...restShipping } = shipping.value;
     restCustomer.phone = phone_number;
     const data = {
-      line_items: cart.line_items.reduce((prev: object, curr: LineItem) => {
+      line_items: cart?.line_items.reduce((prev: object, curr: LineItem) => {
         prev[curr.id] = { quantity: curr.quantity };
         return prev;
       }, {}),
