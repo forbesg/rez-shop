@@ -1,6 +1,7 @@
 <template>
   <div class="bg-yellow-100 py-6">
     <div v-if="product" class="container">
+      <Title>{{ product.name }} | The Shop</Title>
       <div class="grid gap-6 lg:grid-cols-2 bg-white">
         <div>
           <nuxt-picture

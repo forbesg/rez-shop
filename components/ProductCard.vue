@@ -1,14 +1,12 @@
 <template>
   <div class="product-card">
-    <div
-      v-if="product?.image"
-      class="bg-white image-wrapper aspect-[5/4] overflow-hidden"
-    >
+    <div v-if="product?.image" class="bg-white image-wrapper overflow-hidden">
       <nuxt-picture
         :src="product.image?.url"
         :alt="product?.name"
         sizes="sm:100vw md:50vw lg:600px"
         densities="x1 x2"
+        class="aspect-[5/4]"
       />
     </div>
     <!-- <pre>{{ product }}</pre> -->

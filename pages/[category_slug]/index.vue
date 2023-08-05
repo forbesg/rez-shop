@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="category">
+      <Title>{{ category.name }} | The Shop</Title>
       <div v-if="images" class="banner relative h-96 overflow-hidden">
         <nuxt-img
           :src="images[0].url"
