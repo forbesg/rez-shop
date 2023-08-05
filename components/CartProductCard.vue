@@ -4,12 +4,11 @@
   >
     <div class="col-span-1">
       <div class="image-wrapper aspect-[5/4] h-full w-full overflow-hidden">
-        <nuxt-img
+        <nuxt-picture
           :src="item.image.url"
           :alt="item.name"
           sizes="sm:100vw md:25vw"
           densities="x1 x2"
-          class="w-full h-full object-cover"
         />
       </div>
     </div>

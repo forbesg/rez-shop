@@ -13,12 +13,11 @@
             >
               <div class="flex-none w-16 max-h-max sm:w-24">
                 <div class="aspect-[5/4]">
-                  <nuxt-img
+                  <nuxt-picture
                     :src="item.image.url"
                     :alt="item.name"
                     sizes="sm:100vw md:25vw"
                     densities="x1 x2"
-                    class="w-full h-full object-cover"
                   />
                 </div>
               </div>

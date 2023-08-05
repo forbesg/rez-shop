@@ -4,12 +4,11 @@
       v-if="product?.image"
       class="bg-white image-wrapper aspect-[5/4] overflow-hidden"
     >
-      <nuxt-img
+      <nuxt-picture
         :src="product.image?.url"
         :alt="product?.name"
         sizes="sm:100vw md:50vw lg:600px"
         densities="x1 x2"
-        class="h-full w-full object-cover"
       />
     </div>
     <!-- <pre>{{ product }}</pre> -->

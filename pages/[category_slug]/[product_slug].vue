@@ -3,7 +3,7 @@
     <div v-if="product" class="container">
       <div class="grid gap-6 lg:grid-cols-2 bg-white">
         <div class="aspect-square">
-          <nuxt-img
+          <nuxt-picture
             v-if="product.image"
             :src="product.image.url"
             :alt="product.name"
