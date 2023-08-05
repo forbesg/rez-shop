@@ -6,7 +6,7 @@
     >
       <nuxt-img
         :src="product.image?.url"
-        :alt="product?.image?.alt"
+        :alt="product?.name"
         sizes="sm:100vw md:50vw lg:600px"
         densities="x1 x2"
         class="h-full w-full object-cover"

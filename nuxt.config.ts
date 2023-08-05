@@ -4,6 +4,15 @@ export default defineNuxtConfig({
   app: {
     pageTransition: { name: "page", mode: "out-in" },
     head: {
+      htmlAttrs: {
+        lang: "en-GB",
+      },
+      meta: [
+        {
+          name: "description",
+          content: "Rez's Online Shop",
+        },
+      ],
       script: [
         {
           src: "https://js.stripe.com/v3/",
@@ -36,6 +45,7 @@ export default defineNuxtConfig({
     },
     preload: true,
     subsets: "latin",
+    display: "swap",
   },
   image: {
     // Options
