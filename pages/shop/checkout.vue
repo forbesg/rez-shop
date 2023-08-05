@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="container py-12">
+    <div v-if="cart && !pending" class="container py-12">
       <h1 class="font-header text-6xl mb-6">Checkout</h1>
-      <div v-if="cart && !pending" class="relative grid lg:grid-cols-2 gap-6">
+      <div class="relative grid lg:grid-cols-2 gap-6">
         <div>
           <div class="sticky top-24 bg-white p-6">
             <h2 class="mb-4 text-2xl">Your Cart</h2>
@@ -11,14 +11,16 @@
               :key="item.id"
               class="flex gap-4 mb-4"
             >
-              <div class="flex-none w-24 aspect-[5/4]">
-                <nuxt-img
-                  :src="item.image.url"
-                  :alt="item.name"
-                  sizes="sm:100vw md:25vw"
-                  densities="x1 x2"
-                  class="w-full h-full object-cover"
-                />
+              <div class="flex-none w-16 max-h-max sm:w-24">
+                <div class="aspect-[5/4]">
+                  <nuxt-img
+                    :src="item.image.url"
+                    :alt="item.name"
+                    sizes="sm:100vw md:25vw"
+                    densities="x1 x2"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
               </div>
               <div class="flex-1 text-base">
                 <p class="item-title text-lg font-semibold">{{ item.name }}</p>
@@ -243,14 +245,14 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <div v-else>
-        <div
-          class="h-96 py-24 flex flex-col justify-center items-center text-primary"
-        >
-          <LoadingAnimation />
-          <span>Loading...</span>
-        </div>
+    <div v-else>
+      <div
+        class="h-96 py-24 flex flex-col justify-center items-center text-primary"
+      >
+        <LoadingAnimation />
+        <span>Loading Checkout...</span>
       </div>
     </div>
   </div>

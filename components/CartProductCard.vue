@@ -79,9 +79,6 @@
   const { item } = toRefs(props);
 
   async function incrementQuantity() {
-    console.log(item);
-    console.log(quantity);
-
     adding.value = true;
     try {
       const updatedCart = await $commerce.cart.update(item.value.id, {
