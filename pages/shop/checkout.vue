@@ -300,7 +300,7 @@
   import { LineItem } from "@chec/commerce.js/types/line-item";
   const { $commerce } = useNuxtApp();
   const router = useRouter();
-  const { cart } = useCart();
+  const { cart, setCart } = useCart();
   const checkoutId = ref("");
   const customer = ref({
     firstname: "",
@@ -395,6 +395,8 @@
     };
     try {
       const response = await $commerce.checkout.capture(checkoutId.value, data);
+      // Reset Cart
+      setCart(undefined);
       router.replace("/shop/payment-successful");
     } catch (err) {
       console.log(err);
