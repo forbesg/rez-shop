@@ -52,6 +52,7 @@ export default defineNuxtConfig({
     domains: ["cdn.chec.io"],
     format: ["avif", "webp", "jpg"],
     quality: 80,
+    loading: "lazy",
   },
   nitro: {
     prerender: {

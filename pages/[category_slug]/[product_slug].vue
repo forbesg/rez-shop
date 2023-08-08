@@ -2,7 +2,7 @@
   <div class="bg-yellow-100 py-6">
     <div v-if="product" class="container">
       <Title>{{ product.name }} | The Shop</Title>
-      <div class="grid gap-6 lg:grid-cols-2 bg-white">
+      <div class="grid grid-cols-1 lg:grid-cols-2 bg-white">
         <div>
           <nuxt-picture
             v-if="product.image"
@@ -10,10 +10,10 @@
             :alt="product.name"
             sizes="sm:100vw md:50vw lg:600px"
             densities="x1 x2"
-            class="aspect-square"
+            class="aspect-[4/3] lg:aspect-square"
           />
         </div>
-        <div class="flex flex-col p-6">
+        <div class="flex flex-col p-6 lg:p-12">
           <h1 class="text-6xl font-header mb-4">{{ product.name }}</h1>
           <div class="meta text-xs font-button text-gray-500">
             <p>

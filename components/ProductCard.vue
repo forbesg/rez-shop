@@ -5,6 +5,8 @@
         :src="product.image?.url"
         :alt="product?.name"
         sizes="sm:100vw md:50vw lg:600px"
+        width="500"
+        height="400"
         densities="x1 x2"
         class="aspect-[5/4]"
       />
