@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div v-for="section in sections" :key="section.id">
+    <div v-for="(section, index) in sections" :key="section.id">
       <RezIntro
-        v-if="section.__typename === 'TitleBanner'"
+        v-if="section.__typename === 'TitleBannerRecord'"
         :section="section"
       />
+      <RezHero v-if="section.__typename === 'HeroRecord'" :section="section" />
     </div>
   </div>
 </template>

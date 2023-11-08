@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-yellow-100 py-6">
+  <div class="bg-yellow-100 py-6 lg:py-12">
     <div v-if="product" class="container">
       <Title>{{ product.name }} | The Shop</Title>
-      <div class="grid grid-cols-1 lg:grid-cols-2 bg-white">
-        <div>
+      <div class="grid grid-cols-1 lg:grid-cols-2">
+        <div class="relative z-10">
           <nuxt-picture
             v-if="product.image"
             :src="product.image.url"
@@ -13,49 +13,77 @@
             class="aspect-[4/3] lg:aspect-square"
           />
         </div>
-        <div class="flex flex-col p-6 lg:p-12">
-          <h1 class="text-6xl font-header mb-4">{{ product.name }}</h1>
-          <div class="meta text-xs font-button text-gray-500">
-            <p>
-              <span>SKU:</span><span>{{ product.sku }}</span>
-            </p>
-            <p class="mt-1">
-              {{
-                product.is.active && !product.is.sold_out
-                  ? "In Stock"
-                  : "Out of Stock"
-              }}
-            </p>
-            <div class="flex gap-1 mt-2">
-              <nuxt-link
-                v-for="cat in product.categories"
-                :key="cat.id"
-                :to="`/${cat.slug}`"
-                class="bg-orange-600 text-white p-1 px-2 text-xs rounded"
-                >{{ cat.name }}</nuxt-link
-              >
-            </div>
-          </div>
-          <div
-            v-if="product?.description"
-            v-html="product.description"
-            class="flex-1 my-6"
-          ></div>
+        <div class="perpective-box h-full">
+          <transition name="flip" mode="out-in">
+            <div
+              v-if="!getInTouch"
+              class="flex flex-col p-6 h-full lg:p-12 bg-white origin-top md:origin-left"
+            >
+              <h1 class="text-6xl font-header mb-4">{{ product.name }}</h1>
+              <div class="meta text-xs font-button text-gray-500">
+                <p>
+                  <span>SKU:</span><span>{{ product.sku }}</span>
+                </p>
+                <p class="mt-1">
+                  {{
+                    product.is.active && !product.is.sold_out
+                      ? "In Stock"
+                      : "Out of Stock"
+                  }}
+                </p>
+                <div class="flex gap-1 mt-2">
+                  <nuxt-link
+                    v-for="cat in product.categories"
+                    :key="cat.id"
+                    :to="`/${cat.slug}`"
+                    class="bg-orange-600 text-white p-1 px-2 text-xs rounded"
+                    >{{ cat.name }}</nuxt-link
+                  >
+                </div>
+              </div>
+              <div
+                v-if="product?.description"
+                v-html="product.description"
+                class="flex-1 my-6"
+              ></div>
 
-          <p class="text-right">
-            <span>Price: </span
-            ><span class="font-semibold text-xl">{{
-              product.price.formatted_with_symbol
-            }}</span>
-          </p>
-          <button
-            class="block w-full mt-4"
-            :class="[{ loading: addingToCart }]"
-            @click="handleAddToCart"
-          >
-            <span class="text-lg inline-block leading-none mr-1">&plus;</span
-            >Add To Cart
-          </button>
+              <p class="text-right">
+                <span>Price: </span
+                ><span class="font-semibold text-xl">{{
+                  product.price.formatted_with_symbol
+                }}</span>
+              </p>
+              <div
+                v-if="product.is.sold_out"
+                class="block w-full mt-4 text-center font-semibold text-red-500"
+              >
+                Sold Out
+                <button @click="getInTouch = true">Get In Touch</button>
+              </div>
+              <button
+                v-else
+                class="block w-full mt-4"
+                :class="[{ loading: addingToCart }]"
+                @click="handleAddToCart"
+              >
+                <span class="text-lg inline-block leading-none mr-1"
+                  >&plus;</span
+                >Add To Cart
+              </button>
+            </div>
+            <div
+              v-else
+              class="flex flex-col p-6 h-full lg:p-12 bg-white origin-top md:origin-left"
+            >
+              <p class="text-xl mb-4">Get In Touch</p>
+              <p>
+                Email your request and we will happily create the item to order.
+              </p>
+              <button class="mt-6" @click="() => (getInTouch = false)">
+                Close
+              </button>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -69,6 +97,7 @@
   const cartStore = useCart();
   const { setNotification } = useNotification();
   const addingToCart = ref(false);
+  const getInTouch = ref(false);
   const route = useRoute();
   const {
     params: { category_slug, product_slug },
@@ -94,7 +123,6 @@
       const { $commerce } = useNuxtApp();
       // const { id } = await $commerce.cart.retrieve();
       const cartUpdate = await $commerce.cart.add(product.value.id);
-
       cartStore.setCart(cartUpdate);
       setNotification({
         title: "Added to Cart",
@@ -108,4 +136,15 @@
   }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+  .perpective-box {
+    @apply relative z-0;
+    perspective: 1000px;
+    // &:first-child {
+    //   @apply relative z-20;
+    // }
+    // &:last-child {
+    //   @apply relative z-10;
+    // }
+  }
+</style>

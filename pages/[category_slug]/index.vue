@@ -14,7 +14,7 @@
           class="h-full bg-black bg-opacity-25 flex flex-col justify-center relative z-10"
         >
           <div class="container text-white">
-            <h1 class="banner--title text-6xl md:text-8xl font-header mb-2">
+            <h1 class="banner--title text-6xl md:text-8xl font-header mb-6">
               {{ category.name }}
             </h1>
             <p>{{ category.description }}</p>
@@ -63,10 +63,9 @@
     ),
   ]);
 
-  const images =
-    category.value && category.value.assets
-      ? category.value.assets.filter((asset) => asset.is_image)
-      : null;
+  const images = category?.value?.assets
+    ? category.value?.assets.filter((asset) => asset.is_image)
+    : null;
 
   const { data: products } = categoryProducts.value;
 </script>
@@ -75,6 +74,12 @@
   .banner {
     &--title {
       font-size: clamp(3.5rem, 10vw, 6rem);
+      position: relative;
+      display: inline-block;
+      &:after {
+        content: "";
+        @apply w-full h-1 bg-orange-600 absolute left-0 bottom-0 right-0 transform translate-y-1 rounded-lg;
+      }
     }
   }
 </style>

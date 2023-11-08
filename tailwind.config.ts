@@ -42,7 +42,7 @@ export default <Partial<Config>>{
         center: true,
         padding: "1.25rem",
         screens: {
-          "2xl": "1200px",
+          "2xl": "1560px",
         },
       },
     },

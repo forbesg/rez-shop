@@ -3,9 +3,7 @@
 @import "./scss/picture.scss";
 @import "./scss/transitions.scss";
 body {
-  @apply bg-primary;
   font-size: 18px;
-
   .dato-module {
     h2 {
       @apply text-green-600;

@@ -10,15 +10,16 @@
       </div>
     </div>
     <div v-else>
-      <div class="container"></div>
       <div v-if="categories && Array.isArray(categories)">
+        <div class="container">
+          <h1 class="py-4">Shop</h1>
+        </div>
         <div
           v-for="category in categories"
           :key="category.id"
           class="bg-yellow-100 py-6"
         >
           <div class="container">
-            <h1 class="mb-4">Shop</h1>
             <h2 class="text-6xl font-header mb-4">{{ category.name }}</h2>
             <p>{{ category.description }}</p>
             <div v-if="category.categoryProducts" class="mt-6">

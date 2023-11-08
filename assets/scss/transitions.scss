@@ -15,3 +15,28 @@
 .slide-up-leave-active {
   transition: transform 0.6s;
 }
+
+.flip-leave-to {
+  // transform: rotateY(90deg);
+  transform: translateY(-100%);
+  transform-origin: top;
+  @screen md {
+    transform: translateX(-100%);
+    transform-origin: left;
+  }
+  z-index: -1;
+  position: relative;
+}
+.flip-enter-from {
+  transform: rotateX(-90deg);
+  transform-origin: top;
+  @screen md {
+    transform: rotateY(90deg);
+    transform-origin: left;
+  }
+  opacity: 0;
+}
+.flip-enter-active,
+.flip-leave-active {
+  transition: all 0.75s;
+}

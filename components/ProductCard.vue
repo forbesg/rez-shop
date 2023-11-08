@@ -14,7 +14,7 @@
     <!-- <pre>{{ product }}</pre> -->
     <div class="product-card-content">
       <h2 class="product-card-content--title">{{ product.name }}</h2>
-      <div v-html="product.description"></div>
+      <div v-html="product.description" class="text-sm"></div>
     </div>
     <div class="product-card-footer">
       <NuxtLink
@@ -23,7 +23,7 @@
             ? `/${category_slug}/${product.permalink}`
             : `${$route.path}/${product.permalink}`
         "
-        class="button mt-4 block"
+        class="button mt-2 block"
         >View</NuxtLink
       >
     </div>
@@ -47,7 +47,7 @@
   .product-card {
     @apply flex flex-col bg-white;
     &-content {
-      @apply flex-1 p-6 text-base;
+      @apply flex-1 p-4 text-base;
       &--title {
         @apply font-header text-4xl mb-2;
       }
@@ -56,7 +56,7 @@
       }
     }
     &-footer {
-      @apply p-6 pt-0;
+      @apply p-4 pt-0;
     }
   }
 </style>

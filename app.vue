@@ -1,14 +1,11 @@
 <template>
   <div class="bg-primary-900 font-sans min-h-screen text-gray-800">
     <NuxtLoadingIndicator color="#ea580c" :height="2" />
-    <RezHeader />
-    <RezMainNav :cart="cartStore.$state.cart" />
+    <RezHeader :cart="cartStore.$state.cart" />
+    <div class="sentinal"></div>
     <div class="min-h-screen bg-yellow-100">
       <NuxtPage />
     </div>
-    <!-- <div v-if="cartStore.$state.cart">
-      {{ cart }}
-    </div> -->
     <RezFooter />
     <transition name="slide-up">
       <Notification

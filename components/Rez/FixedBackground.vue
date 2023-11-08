@@ -21,6 +21,7 @@
                 width="600"
                 height="400"
                 alt="Chicken"
+                class="w-full"
               />
             </div>
           </div>

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="cart-product-card bg-white grid grid-cols-1 md:grid-cols-4 shadow"
-  >
+  <div class="cart-product-card bg-white grid grid-cols-1 md:grid-cols-4">
     <div class="col-span-1">
       <div class="image-wrapper h-full w-full overflow-hidden">
         <nuxt-picture
