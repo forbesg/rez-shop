@@ -22,7 +22,8 @@
 
 <style lang="scss" scoped>
   #logo {
-    width: 8rem;
+    width: 100%;
+    max-width: 8rem;
     svg {
       @apply h-full w-full;
     }

@@ -1,12 +1,12 @@
 <template>
   <div class="rez-header text-center">
-    <div class="container py-6 flex justify-between items-center">
-      <RezMainNav class="flex-1" />
+    <div class="py-4 flex justify-between items-center">
+      <RezMainNav class="flex-1 hidden md:block" />
       <div
-        class="logo select-none text-yellow font-header cursor-pointer inline-block flex-none"
+        class="logo select-none text-yellow font-header cursor-pointer inline-block flex-none w-28"
         @click="$router.push('/')"
       >
-        <Logo class="" />
+        <Logo />
         <span class="text-yellow text-2xl block">The · Strap · Line</span>
       </div>
       <nav class="flex-1 text-right">
@@ -26,7 +26,7 @@
           </svg>
           <span
             v-if="cart && cart.line_items.length"
-            class="absolute -top-2 -right-4 font-sans text-sm bg-white border border-orange-600 text-orange-600 font-semibold leading-none inline-flex justify-center items-center w-6 h-6 rounded-full"
+            class="absolute -top-1 -right-3 font-sans text-sm bg-orange-600 border border-white text-white font-semibold leading-none inline-flex justify-center items-center w-6 h-6 rounded-full"
           >
             {{ cart.total_items }}</span
           ></NuxtLink
@@ -67,6 +67,11 @@
       @apply bg-opacity-100 transition transition-all duration-700;
       position: sticky;
       animation: fadeInDown 200ms ease-in;
+    }
+    > div {
+      max-width: 1560px;
+      padding-inline: 1.25rem;
+      margin-inline: auto;
     }
     nav {
       a {

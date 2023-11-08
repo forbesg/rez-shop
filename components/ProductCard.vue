@@ -14,7 +14,7 @@
     <!-- <pre>{{ product }}</pre> -->
     <div class="product-card-content">
       <h2 class="product-card-content--title">{{ product.name }}</h2>
-      <div v-html="product.description" class="text-sm"></div>
+      <div v-html="product.description" class="text-base"></div>
     </div>
     <div class="product-card-footer">
       <NuxtLink
@@ -47,9 +47,9 @@
   .product-card {
     @apply flex flex-col bg-white;
     &-content {
-      @apply flex-1 p-4 text-base;
+      @apply flex-1 p-6 text-base;
       &--title {
-        @apply font-header text-4xl mb-2;
+        @apply font-header text-5xl mb-2;
       }
       p {
         @apply my-2;

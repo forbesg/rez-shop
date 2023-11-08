@@ -8,13 +8,10 @@
       />
     </div>
 
-    <div class="absolute bottom-0 right-0 z-10 p-12">
+    <div class="absolute bottom-0 right-0 z-10 p-6 md:p-12">
       <div class="container text-right">
-        <h1 class="text-orange text-7xl font-header">{{ section.title }}</h1>
-        <h2
-          v-if="section.subtitle"
-          class="inline-block leading-loose border-t-2 border-orange-600 mt-2"
-        >
+        <h1 class="hero--title">{{ section.title }}</h1>
+        <h2 v-if="section.subtitle" class="hero--subtitle">
           {{ section.subtitle }}
         </h2>
       </div>
@@ -42,6 +39,14 @@
       img {
         @apply w-full h-full object-cover object-center;
       }
+    }
+
+    &--title {
+      @apply text-primary text-8xl lg:text-9xl font-header;
+      text-shadow: 0.005em 0.005em 0 #fff;
+    }
+    &--subtitle {
+      @apply inline-block leading-loose border-t-2 border-orange-600 text-3xl mt-2;
     }
   }
 </style>
