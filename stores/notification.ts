@@ -1,12 +1,12 @@
-interface Notification {
+type Notification = {
   title: string;
   message: string;
   type?: "success" | "error" | "info";
-}
+};
 
-interface NotificationState {
+type NotificationState = {
   notification: Notification | null;
-}
+};
 
 import { defineStore } from "pinia";
 

@@ -1,5 +1,5 @@
 export default function () {
-  return (value) =>
+  return (value: number) =>
     value
       ? (value / 100).toLocaleString("en-GB", {
           style: "currency",

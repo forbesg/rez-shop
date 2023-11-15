@@ -10,16 +10,12 @@
           }"
           class="relative z-10"
         >
-          <picture class="w-full h-full object-cover">
-            <source :srcset="product.images[0]?.responsiveImage.srcSet" />
-            <img
-              :src="product.images[0]?.responsiveImage.src"
-              :alt="product.images[0]?.responsiveImage.alt"
-              width="800"
-              height="800"
-              class="aspect-[1/1]"
-            />
-          </picture>
+          <DatoImage
+            :image="product.images[0]"
+            :width="800"
+            :height="800"
+            class="aspect-[1/1]"
+          />
         </div>
         <div class="perpective-box h-full">
           <transition name="flip" mode="out-in">
@@ -196,7 +192,6 @@
     query: PRODUCT_QUERY,
     variables: { slug: product_slug },
   });
-  console.log(data);
 
   const product = data?.value?.product;
 </script>

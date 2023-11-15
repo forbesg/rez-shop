@@ -63,6 +63,7 @@
           slug
           description
           images {
+            blurUpThumb
             responsiveImage(imgixParams: { w: 400, h:300, fit: crop, crop: focalpoint, auto: format}) {
               srcSet
               src

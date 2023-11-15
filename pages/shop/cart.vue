@@ -4,7 +4,7 @@
     <div v-if="!loading" class="py-6">
       <div class="container">
         <h1 class="text-6xl font-header mb-8">Your Cart</h1>
-        <div class="grid grid-cols-3">
+        <div class="grid lg:grid-cols-3">
           <div
             v-if="cartStore.getCart && cartStore.getCart.items.length"
             class="flex flex-col gap-6 col-span-2"
@@ -17,7 +17,6 @@
             <div class="text-right">
               <p class="text-xl font-semibold">
                 Cart Total:
-                <!-- {{ cartStore.$state.cart.subtotal.formatted_with_symbol }} -->
                 {{ currency(cartStore.getCart?.cart_total) }}
               </p>
               <p class="text-base">Shipping: Calculated at checkout</p>

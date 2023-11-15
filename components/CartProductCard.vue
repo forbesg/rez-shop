@@ -1,7 +1,7 @@
 <template>
-  <div class="cart-product-card grid grid-cols-1 md:grid-cols-4">
+  <div class="cart-product-card grid grid-cols-5 gap-4 p-2 md:grid-cols-4">
     <div class="col-span-1">
-      <div class="image-wrapper h-full w-full overflow-hidden">
+      <div class="image-wrapper overflow-hidden aspect-square">
         <picture
           v-if="item.images && item.images[0]"
           class="h-full w-full object-cover object-center"
@@ -15,14 +15,14 @@
       </div>
     </div>
     <div
-      class="col-span-3 p-8 text-base flex flex-wrap gap-4 items-center md:grid-cols-3"
+      class="col-span-4 md:col-span-3 md:p-8 text-base flex flex-wrap gap-4 items-center md:grid-cols-3"
     >
       <div class="flex-none w-full">
-        <p class="text-xl font-semibold leading-none mb-2">
+        <p class="cart-product-card--title">
           {{ item.title }}
         </p>
-        <div class="flex gap-4 justify-between">
-          <span class="text-xs text-gray-600">SKU: {{ item.sku }}</span>
+        <div class="cart-product-card--meta flex gap-4 justify-between">
+          <span class="text-gray-600">SKU: {{ item.sku }}</span>
           <button
             class="white p-0 px-1 text-xs hover:bg-orange-600 hover:text-white"
             :class="[{ loading: deleting }]"
@@ -100,8 +100,6 @@
   async function removeItem() {
     deleting.value = true;
     try {
-      // const updatedCart = await $commerce.cart.remove(item.value.id);
-      // cartStore.setCart(updatedCart);
       cartStore.removeFromCart(item.value.id);
     } catch (err) {
       console.log(err);
@@ -114,6 +112,15 @@
 <style lang="scss" scoped>
   .cart-product-card {
     @apply bg-orange-50 bg-opacity-25 shadow-sm;
+
+    &--title {
+      @apply font-semibold leading-none;
+      font-size: clamp(0.95rem, 2.5vw, 1.5rem);
+      margin-bottom: 0.15em;
+    }
+    &--meta {
+      font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+    }
   }
   button.quantity {
     @apply p-1 px-3;

@@ -1,16 +1,24 @@
-export default (options) => {
+type DatoGQLQueryOptions = {
+  query: string;
+  variables: Object | undefined;
+};
+
+type DatoHeaders = HeadersInit & { "X-Include-Drafts": boolean };
+
+export default (options: DatoGQLQueryOptions) => {
   const { query, variables = {} } = options;
   const {
     public: { datoCmsToken },
   } = useRuntimeConfig();
   const key = JSON.stringify(options);
+  const headers = {
+    Authorization: `Bearer ${datoCmsToken}`,
+    "X-Include-Drafts": true,
+  };
   return useFetch("https://graphql.datocms.com/", {
     key,
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${datoCmsToken}`,
-      "X-Include-Drafts": true,
-    },
+    headers,
     body: {
       query,
       variables,

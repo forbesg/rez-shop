@@ -4,7 +4,7 @@
       v-if="product?.images[0]"
       class="bg-white image-wrapper overflow-hidden"
     >
-      <picture>
+      <!-- <picture>
         <source :srcset="product.images[0]?.responsiveImage.srcSet" />
         <img
           :src="product.images[0]?.responsiveImage.src"
@@ -13,7 +13,8 @@
           height="300"
           class="aspect-[4/3]"
         />
-      </picture>
+      </picture> -->
+      <DatoImage :image="product.images[0]" :width="400" :height="300" />
     </div>
     <div class="product-card-content">
       <h2 class="product-card-content--title">{{ product.title }}</h2>
