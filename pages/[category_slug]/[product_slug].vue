@@ -196,6 +196,7 @@
     query: PRODUCT_QUERY,
     variables: { slug: product_slug },
   });
+  console.log(data);
 
   const product = data?.value?.product;
 </script>
@@ -204,12 +205,6 @@
   .perpective-box {
     @apply relative z-0;
     perspective: 1000px;
-    // &:first-child {
-    //   @apply relative z-20;
-    // }
-    // &:last-child {
-    //   @apply relative z-10;
-    // }
   }
   .related-products {
     @apply bg-white bg-opacity-25 py-24 my-12;
