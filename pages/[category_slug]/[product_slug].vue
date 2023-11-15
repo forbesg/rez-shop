@@ -1,17 +1,25 @@
 <template>
-  <div class="bg-yellow-100 py-6 lg:py-12">
+  <div class="py-6 lg:py-12">
     <div v-if="product" class="container">
-      <Title>{{ product.name }} | The Shop</Title>
+      <Title>{{ product.title }} | The Shop</Title>
       <div class="grid grid-cols-1 lg:grid-cols-2">
-        <div class="relative z-10">
-          <nuxt-picture
-            v-if="product.image"
-            :src="product.image.url"
-            :alt="product.name"
-            sizes="sm:100vw md:50vw lg:600px"
-            densities="x1 x2"
-            class="aspect-[4/3] lg:aspect-square"
-          />
+        <div
+          :style="{
+            backgroundImage: `url(${product.images[0]?.blurUpThumb})`,
+            backgroundSize: 'cover',
+          }"
+          class="relative z-10"
+        >
+          <picture class="w-full h-full object-cover">
+            <source :srcset="product.images[0]?.responsiveImage.srcSet" />
+            <img
+              :src="product.images[0]?.responsiveImage.src"
+              :alt="product.images[0]?.responsiveImage.alt"
+              width="800"
+              height="800"
+              class="aspect-[1/1]"
+            />
+          </picture>
         </div>
         <div class="perpective-box h-full">
           <transition name="flip" mode="out-in">
@@ -19,14 +27,14 @@
               v-if="!getInTouch"
               class="flex flex-col p-6 h-full lg:p-12 bg-white origin-top md:origin-left"
             >
-              <h1 class="text-6xl font-header mb-4">{{ product.name }}</h1>
+              <h1 class="text-6xl font-header mb-4">{{ product.title }}</h1>
               <div class="meta text-xs font-button text-gray-500">
                 <p>
                   <span>SKU:</span><span>{{ product.sku }}</span>
                 </p>
                 <p class="mt-1">
                   {{
-                    product.is.active && !product.is.sold_out
+                    product.inStock && product.stock > 0
                       ? "In Stock"
                       : "Out of Stock"
                   }}
@@ -37,7 +45,7 @@
                     :key="cat.id"
                     :to="`/${cat.slug}`"
                     class="bg-orange-600 text-white p-1 px-2 text-xs rounded"
-                    >{{ cat.name }}</nuxt-link
+                    >{{ cat.title }}</nuxt-link
                   >
                 </div>
               </div>
@@ -50,14 +58,14 @@
               <p class="text-right">
                 <span>Price: </span
                 ><span class="font-semibold text-xl">{{
-                  product.price.formatted_with_symbol
+                  currency(product.price)
                 }}</span>
               </p>
               <div
-                v-if="product.is.sold_out"
-                class="block w-full mt-4 text-center font-semibold text-red-500"
+                v-if="!product.inStock"
+                class="flex justify-between items-center gap-4 w-full mt-4 text-center font-semibold text-red-500"
               >
-                Sold Out
+                <span class="text-sm">Sold Out</span>
                 <button @click="getInTouch = true">Get In Touch</button>
               </div>
               <button
@@ -75,7 +83,7 @@
               v-else
               class="flex flex-col p-6 h-full lg:p-12 bg-white origin-top md:origin-left"
             >
-              <p class="text-xl mb-4">Get In Touch</p>
+              <p class="text-3xl mb-4">Get In Touch</p>
               <p>
                 Email your request and we will happily create the item to order.
               </p>
@@ -87,53 +95,109 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="product.relatedProducts && product.relatedProducts.length"
+      class="related-products"
+    >
+      <div class="container">
+        <h2>You might also like...</h2>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <ProductCard
+            v-for="relatedProduct in product.relatedProducts"
+            :key="relatedProduct.id"
+            :product="relatedProduct"
+            :category_slug="relatedProduct.category[0].slug"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { useCart } from "@/stores/cart";
+  const cart = useCart();
   import { useNotification } from "@/stores/notification";
-
-  const cartStore = useCart();
-  const { setNotification } = useNotification();
-  const addingToCart = ref(false);
+  import { CartItem } from "types";
+  const notification = useNotification();
   const getInTouch = ref(false);
-  const route = useRoute();
-  const {
-    params: { category_slug, product_slug },
-  } = route;
-  const { $commerce } = useNuxtApp();
-  const { data: product, error } = await useAsyncData(
-    `${category_slug}-${product_slug}`,
-    () =>
-      $commerce.products.retrieve(`${product_slug}`, {
-        type: "permalink",
-      })
-  );
-
-  if (!product.value) {
-    createError({ statusCode: 404, statusMessage: "Page Not Found" });
-  }
-
-  async function handleAddToCart() {
+  const addingToCart = ref(false);
+  const handleAddToCart = () => {
     console.log("Add to cart");
-    if (!product || !product.value) return;
-    try {
-      addingToCart.value = true;
-      const { $commerce } = useNuxtApp();
-      // const { id } = await $commerce.cart.retrieve();
-      const cartUpdate = await $commerce.cart.add(product.value.id);
-      cartStore.setCart(cartUpdate);
-      setNotification({
-        title: "Added to Cart",
-        message: "This item has been successfully added to your cart",
-      });
-    } catch (err) {
-      console.log(err);
-    } finally {
-      addingToCart.value = false;
+    const { id, title, quantity = 1, sku, price, images } = product;
+    const cartItem: CartItem = { id, title, quantity, sku, price, images };
+    cart.addToCart(cartItem);
+    notification.setNotification({
+      type: "success",
+      title: "Added to Cart",
+      message: "Your item has been added to your cart",
+    });
+  };
+  const {
+    params: { product_slug },
+  } = useRoute();
+
+  const currency = useCurrency();
+
+  const PRODUCT_QUERY = `
+    query ($slug: String) {
+      product (filter: { slug: { eq: $slug }}) {
+        id
+        title
+        description
+        sku
+        _seoMetaTags {
+          attributes
+          tag
+        }
+        images {
+          blurUpThumb
+          responsiveImage(imgixParams: { w: 800, h: 800, fit: crop, crop: focalpoint, auto:format }) {
+            alt
+            src
+            srcSet
+          }
+        }
+        price
+        salePrice
+        stock
+        inStock
+        categories: category {
+          id
+          title
+          slug
+        }
+        height
+        width
+        length
+        relatedProducts {
+          id
+          title
+          # description
+          slug
+          price
+          images {
+            blurUpThumb
+            responsiveImage(imgixParams: { w: 800, h: 800, fit: crop, crop: focalpoint, auto:format }) {
+              alt
+              src
+              srcSet
+            }
+          }
+          category {
+            slug
+          }
+        }
+      }
     }
-  }
+  `;
+  const { data, pending } = await useGraphqlQuery({
+    query: PRODUCT_QUERY,
+    variables: { slug: product_slug },
+  });
+
+  const product = data?.value?.product;
 </script>
 
 <style lang="scss" scoped>
@@ -146,5 +210,11 @@
     // &:last-child {
     //   @apply relative z-10;
     // }
+  }
+  .related-products {
+    @apply bg-white bg-opacity-25 py-24 my-12;
+    h2 {
+      @apply text-2xl mb-6;
+    }
   }
 </style>

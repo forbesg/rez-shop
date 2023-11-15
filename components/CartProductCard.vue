@@ -1,31 +1,36 @@
 <template>
-  <div class="cart-product-card bg-white grid grid-cols-1 md:grid-cols-4">
+  <div class="cart-product-card grid grid-cols-1 md:grid-cols-4">
     <div class="col-span-1">
       <div class="image-wrapper h-full w-full overflow-hidden">
-        <nuxt-picture
-          :src="item.image.url"
-          :alt="item.name"
-          sizes="sm:100vw md:25vw"
-          densities="x1 x2"
-          class="aspect-[5/4]"
-        />
+        <picture
+          v-if="item.images && item.images[0]"
+          class="h-full w-full object-cover object-center"
+        >
+          <source :srcset="item.images[0].responsiveImage.srcSet" />
+          <img
+            :src="item.images[0].responsiveImage.src"
+            :alt="item.images[0].responsiveImage.alt"
+          />
+        </picture>
       </div>
     </div>
     <div
       class="col-span-3 p-8 text-base flex flex-wrap gap-4 items-center md:grid-cols-3"
     >
       <div class="flex-none w-full">
-        <p class="text-xl font-semibold leading-none">
-          {{ item.name }}
+        <p class="text-xl font-semibold leading-none mb-2">
+          {{ item.title }}
         </p>
-        <span class="text-xs text-gray-600">SKU: {{ item.sku }}</span>
-        <button
-          class="white"
-          :class="[{ loading: deleting }]"
-          @click="removeItem"
-        >
-          Remove
-        </button>
+        <div class="flex gap-4 justify-between">
+          <span class="text-xs text-gray-600">SKU: {{ item.sku }}</span>
+          <button
+            class="white p-0 px-1 text-xs hover:bg-orange-600 hover:text-white"
+            :class="[{ loading: deleting }]"
+            @click="removeItem"
+          >
+            Remove
+          </button>
+        </div>
       </div>
       <p class="flex flex-1 justify-start items-center gap-4">
         <span>Quantity: </span
@@ -47,12 +52,12 @@
         >
       </p>
       <p class="text-right">
-        <span>{{ item.price.formatted_with_symbol }}</span>
+        <span>{{ currency(item.price) }}</span>
       </p>
       <div class="text-right flex-none w-full mt-4">
         <p class="text-xl font-semibold">
           <span>Total Price: </span
-          ><span>{{ item.line_total.formatted_with_symbol }}</span>
+          ><span>{{ currency(item.price * item.quantity) }}</span>
         </p>
       </div>
     </div>
@@ -61,28 +66,21 @@
 
 <script setup lang="ts">
   import { useCart } from "@/stores/cart";
+  import { CartItem } from "types";
 
-  const { $commerce } = useNuxtApp();
   const cartStore = useCart();
   const adding = ref(false);
   const removing = ref(false);
   const deleting = ref(false);
   const quantity = ref();
-  const props = defineProps({
-    item: {
-      type: Object,
-      required: true,
-    },
-  });
+  const currency = useCurrency();
+  const props = defineProps<{ item: CartItem }>();
   const { item } = toRefs(props);
 
   async function incrementQuantity() {
     adding.value = true;
     try {
-      const updatedCart = await $commerce.cart.update(item.value.id, {
-        quantity: item.value.quantity + 1,
-      });
-      cartStore.setCart(updatedCart);
+      cartStore.incrementQuantity(item.value);
     } catch (err) {
       console.log(err);
     } finally {
@@ -92,10 +90,7 @@
   async function decrementQuantity() {
     removing.value = true;
     try {
-      const updatedCart = await $commerce.cart.update(item.value.id, {
-        quantity: item.value.quantity - 1,
-      });
-      cartStore.setCart(updatedCart);
+      cartStore.decrementQuantity(item.value);
     } catch (err) {
       console.log(err);
     } finally {
@@ -105,8 +100,9 @@
   async function removeItem() {
     deleting.value = true;
     try {
-      const updatedCart = await $commerce.cart.remove(item.value.id);
-      cartStore.setCart(updatedCart);
+      // const updatedCart = await $commerce.cart.remove(item.value.id);
+      // cartStore.setCart(updatedCart);
+      cartStore.removeFromCart(item.value.id);
     } catch (err) {
       console.log(err);
     } finally {
@@ -116,6 +112,9 @@
 </script>
 
 <style lang="scss" scoped>
+  .cart-product-card {
+    @apply bg-orange-50 bg-opacity-25 shadow-sm;
+  }
   button.quantity {
     @apply p-1 px-3;
   }

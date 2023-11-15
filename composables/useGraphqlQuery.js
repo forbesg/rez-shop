@@ -1,12 +1,15 @@
 export default (options) => {
   const { query, variables = {} } = options;
-  const runtimeConfig = useRuntimeConfig();
+  const {
+    public: { datoCmsToken },
+  } = useRuntimeConfig();
   const key = JSON.stringify(options);
-  return useFetch("https://graphql.datocms.com", {
+  return useFetch("https://graphql.datocms.com/", {
     key,
     method: "POST",
     headers: {
-      Authorization: `Bearer ${runtimeConfig.public.datoCmsToken}`,
+      Authorization: `Bearer ${datoCmsToken}`,
+      "X-Include-Drafts": true,
     },
     body: {
       query,

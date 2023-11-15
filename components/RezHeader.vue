@@ -25,10 +25,10 @@
             />
           </svg>
           <span
-            v-if="cart && cart.line_items.length"
+            v-if="cart?.items?.length"
             class="absolute -top-1 -right-3 font-sans text-sm bg-orange-600 border border-white text-white font-semibold leading-none inline-flex justify-center items-center w-6 h-6 rounded-full"
           >
-            {{ cart.total_items }}</span
+            {{ cart.items.length }}</span
           ></NuxtLink
         >
       </nav>

@@ -1,27 +1,37 @@
 <template>
   <div class="product-card">
-    <div v-if="product?.image" class="bg-white image-wrapper overflow-hidden">
-      <nuxt-picture
-        :src="product.image?.url"
-        :alt="product?.name"
-        sizes="sm:100vw md:50vw lg:600px"
-        width="500"
-        height="400"
-        densities="x1 x2"
-        class="aspect-[5/4]"
-      />
+    <div
+      v-if="product?.images[0]"
+      class="bg-white image-wrapper overflow-hidden"
+    >
+      <picture>
+        <source :srcset="product.images[0]?.responsiveImage.srcSet" />
+        <img
+          :src="product.images[0]?.responsiveImage.src"
+          :alt="product.images[0]?.responsiveImage.alt"
+          width="400"
+          height="300"
+          class="aspect-[4/3]"
+        />
+      </picture>
     </div>
-    <!-- <pre>{{ product }}</pre> -->
     <div class="product-card-content">
-      <h2 class="product-card-content--title">{{ product.name }}</h2>
-      <div v-html="product.description" class="text-base"></div>
+      <h2 class="product-card-content--title">{{ product.title }}</h2>
+      <div
+        v-if="product.description"
+        v-html="product.description"
+        class="text-base"
+      ></div>
     </div>
     <div class="product-card-footer">
+      <div v-if="product.price" class="text-right text-base font-semibold">
+        <p>Price: {{ currency(product.price) }}</p>
+      </div>
       <NuxtLink
         :to="
           category_slug
-            ? `/${category_slug}/${product.permalink}`
-            : `${$route.path}/${product.permalink}`
+            ? `/${category_slug}/${product.slug}`
+            : `${$route.path}/${product.slug}`
         "
         class="button mt-2 block"
         >View</NuxtLink
@@ -31,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+  const currency = useCurrency();
   defineProps({
     product: {
       type: Object,
@@ -49,7 +60,7 @@
     &-content {
       @apply flex-1 p-6 text-base;
       &--title {
-        @apply font-header text-5xl mb-2;
+        @apply font-header text-5xl mb-4;
       }
       p {
         @apply my-2;

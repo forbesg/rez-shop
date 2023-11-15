@@ -26,7 +26,7 @@
 
 <style lang="scss" scoped>
   .intro {
-    @apply bg-yellow-100 py-24;
+    @apply py-24;
     &--title {
       @apply text-8xl font-header text-primary mb-6;
       font-size: clamp(3.5rem, 10vw, 6rem);

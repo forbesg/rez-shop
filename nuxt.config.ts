@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   // devtools: { enabled: true },
   app: {
-    pageTransition: { name: "page", mode: "out-in" },
+    // pageTransition: { name: "page", mode: "out-in" },
     head: {
       htmlAttrs: {
         lang: "en-GB",
@@ -67,6 +67,7 @@ export default defineNuxtConfig({
       commerceJsKey: process.env.COMMERCE_JS_KEY,
       datoCmsToken: process.env.DATO_CMS_TOKEN,
       datoEndpoint: process.env.DATO_ENDPOINT,
+      production: process.env.NUXT_ENV !== "production",
     },
   },
   ssr: true,
