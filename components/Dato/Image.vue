@@ -13,6 +13,7 @@
       :alt="image.responsiveImage.alt"
       :width="width"
       :height="height"
+      loading="lazy"
     />
   </picture>
 </template>
@@ -34,20 +35,18 @@
     },
   });
   onMounted(() => {
-    // console.log("mounted");
-    // console.log(picture);
     const pictureElement = picture.value;
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           console.log("intersectiong");
           entry.target.classList.add("loaded");
-          entry.target.querySelector("img").classList.add("loaded");
+          entry.target?.querySelector("img")?.classList.add("loaded");
         }
       });
     });
 
-    observer.observe(pictureElement);
+    pictureElement ? observer.observe(pictureElement) : "";
   });
 </script>
 
