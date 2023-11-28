@@ -27,7 +27,9 @@ export const useCart = defineStore("userCart", {
 
       this.cart = !localCart
         ? {
-            id: self.crypto.randomUUID(),
+            id: self.crypto.randomUUID
+              ? self.crypto.randomUUID()
+              : "0iid7e8huqwy2",
             items: [],
             cart_total: 0,
           }

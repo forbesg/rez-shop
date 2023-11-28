@@ -1,7 +1,13 @@
 <template>
-  <div
-    class="mt-6 bg-gradient-to-b from-slate-100 to-gray-50 border border-slate-200 bg-opacity-75 p-4 rounded"
-  >
+  <div class="mt-6 rounded">
+    <div class="faux-form">
+      <span class="form-section-header block mb-4 text-xl"
+        >Shipping Address</span
+      >
+    </div>
+    <div>
+      <div id="address-element" class="mb-6"></div>
+    </div>
     <div class="faux-form">
       <span class="form-section-header block mb-4 text-xl">Card Details</span>
     </div>
@@ -15,12 +21,7 @@
         :class="[{ loading: submittingOrder }]"
       >
         Complete Order -
-        {{
-          (total / 100).toLocaleString("en-GB", {
-            style: "currency",
-            currency: "GBP",
-          })
-        }}
+        {{ currency(total) }}
       </button>
       <div v-if="error" class="error">
         <p>{{ error }}</p>
@@ -31,6 +32,7 @@
 
 <script setup lang="ts">
   // import useStripe from "stripe";
+  const currency = useCurrency();
   const props = defineProps({
     total: {
       type: Number,
@@ -56,20 +58,34 @@
   const submitElements = ref();
   const error = ref("");
   onMounted(() => {
-    const stripe = Stripe("pk_test_Ri2JyD3poWvt6YvpznA1nVpR0083v3iGTW");
+    // const stripe = window.Stripe("pk_test_Ri2JyD3poWvt6YvpznA1nVpR0083v3iGTW");
+    const stripe = window.Stripe("pk_test_Ri2JyD3poWvt6YvpznA1nVpR0083v3iGTW"); // CBD Test Stripe Account
 
     const appearance = {
       /* appearance */
       theme: "stripe",
       variables: {
-        colorPrimary: "orange",
+        colorPrimary: "#ea580c",
         colorBackground: "#ffffff",
         colorText: "#30313d",
         colorDanger: "#df1b41",
         fontFamily: "'Questrial', system-ui, sans-serif",
         spacingUnit: ".25rem",
         borderRadius: "4px",
+        boxShadow: "none",
+        outline: "none",
         // See all possible variables below
+      },
+      rules: {
+        ".Input": {
+          boxShadow: "none",
+        },
+        ".Input:focus": {
+          boxShadow: "none",
+          borderColor: "transparent",
+          outline: "2px solid #ea580c",
+          outlineWidth: "2px",
+        },
       },
     };
     const options = {
@@ -94,9 +110,12 @@
       appearance,
     });
     const paymentElement = elements.create("payment", options);
+    const addressElement = elements.create("address", { mode: "shipping" });
+
     // Delay mount to ensure that DOM element exists
     setTimeout(() => {
       paymentElement.mount("#payment-element");
+      addressElement.mount("#address-element");
     }, 1000);
 
     paymentElement.on("change", (event: any) => {
@@ -140,4 +159,4 @@
   });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss"></style>
